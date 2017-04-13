@@ -1,0 +1,12 @@
+---
+- hosts: localhost
+  remote_user: root
+  tasks:
+  - name: Install the requirements
+    package: name={{item}} state=latest
+    with_items:
+    - beakerlib
+    - coreutils
+
+  - name: Execute test-basics
+    shell: BEAKERLIB_DIR=$PWD ./test-basics 2>&1 | tee output
