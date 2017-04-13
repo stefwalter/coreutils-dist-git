@@ -16,6 +16,8 @@ Source10: coreutils-find-requires.sh
 %global __find_provides %{_rpmconfigdir}/find-provides
 %global __find_requires %{SOURCE10} %{_rpmconfigdir}/find-requires
 
+Source200: test-basics
+
 # upstream patches
 Patch1:   coreutils-8.27-date-debug-test.patch
 
@@ -266,6 +268,10 @@ grep LC_TIME %name.lang | cut -d'/' -f1-6 | sed -e 's/) /) %%dir /g' >>%name.lan
 # (sb) Deal with Installed (but unpackaged) file(s) found
 rm -f $RPM_BUILD_ROOT%{_infodir}/dir
 
+# tests
+mkdir -p %{buildroot}/usr/tests/coreutils
+install %{SOURCE200} %{buildroot}/usr/tests/coreutils/
+
 %preun common
 if [ $1 = 0 ]; then
   if [ -f %{_infodir}/%{name}.info.gz ]; then
@@ -301,6 +307,16 @@ fi
 # The following go to /usr/share/doc/coreutils-common
 %doc ABOUT-NLS NEWS README THANKS TODO
 %license COPYING
+
+%package tests
+Requires: coreutils
+Summary: Tests for coreutils package
+
+%description tests
+Tests for coreutils package
+
+%files tests
+/usr/tests/coreutils/
 
 %changelog
 * Wed Mar 15 2017 Kamil Dudka <kdudka@redhat.com> - 8.27-2
